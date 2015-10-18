@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if ! g++ -o2 -Wall main.cpp -o main
+then
+    exit
+fi
+
+rm -f generated
+rm -f bad
+./main < words > generated
+declare -a s
+((n = 0))
+
+while read line
+do
+    s[n]=$line
+    ((n++))
+done < generated
+
+((r = 0))
+
+for ((i = 0; i < n; i++))
+do
+    echo ${s[$i]}
+    read good
+
+    if [[ $good == "0" ]]
+    then
+        ((r++))
+        echo ${s[$i]} >> bad
+    fi
+done
+
+if ((r == 0))
+then
+    echo "You are awesome!"
+fi
+
+rm -f main
+rm -f generated
